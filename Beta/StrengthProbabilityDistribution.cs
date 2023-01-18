@@ -18,11 +18,28 @@ internal class StrengthProbabilityDistribution
         return _probabilities[strength.Value - 1];
     }
 
+    public Strength Cumulative(double probability)
+    {
+        double cumulativeProbability = 0.0;
+
+        for (int i = 1; i < _probabilities.Length; i++)
+        {
+            cumulativeProbability += Density(new Strength(i));
+
+            if (cumulativeProbability > probability)
+            {
+                return new Strength(i - 1);
+            }
+        }
+
+        return new Strength(SIZE);
+    }
+
     public void ForEach(Action<Strength> f)
     {
         for (int i = 0; i < _probabilities.Length; i++)
         {
-            f(new(i + 1));
+            f(new Strength(i + 1));
         }
     }
 
