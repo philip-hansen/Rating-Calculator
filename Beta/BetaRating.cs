@@ -5,14 +5,14 @@ namespace RatingCalculator.Beta;
 internal class BetaRating : IRating
 {
     private readonly StrengthProbabilityDistribution _probabilities;
-    private readonly IEnumerable<StrengthProbabilityDistribution> _opponents;
+    private readonly IEnumerable<StrengthProbabilityDistribution> _otherEntities;
 
     public BetaRating(
         StrengthProbabilityDistribution strengthProbabilityDistribution,
-        IEnumerable<StrengthProbabilityDistribution> opponents)
+        IEnumerable<StrengthProbabilityDistribution> otherEntities)
     {
         _probabilities = strengthProbabilityDistribution;
-        _opponents = opponents;
+        _otherEntities = otherEntities;
     }
 
     public double Mean()
