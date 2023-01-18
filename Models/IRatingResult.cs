@@ -1,6 +1,6 @@
 ﻿namespace RatingCalculator.Models;
 
-public interface IRatingResult<TPlayer, TRating>
+public interface IRatingResult<TEntity>
 {
-    TRating Get(TPlayer player);
+    IRating Get(TEntity player);
 }

@@ -6,11 +6,11 @@ internal readonly record struct Strength
 
     public int Value => _value;
 
-    public double NormalizedValue => (double)_value / BetaRatingProbabilities.SIZE;
+    public double NormalizedValue => (double)_value / StrengthProbabilityDistribution.SIZE;
 
     public Strength(int value)
     {
-        if (value < 1 || value > BetaRatingProbabilities.SIZE - 1)
+        if (value < 0 || value > StrengthProbabilityDistribution.SIZE)
         {
             throw new ArgumentOutOfRangeException(nameof(value));
         }

@@ -1,24 +1,17 @@
 ﻿namespace RatingCalculator.Models;
 
-public class Game<TPlayer> where TPlayer : notnull
+public class Game<TEntity>
 {
-    public TPlayer HomePlayer { get; init; }
+    public TEntity HomeEntity { get; init; }
 
-    public TPlayer AwayPlayer { get; init; }
+    public TEntity AwayEntity { get; init; }
 
     public GameResult Result { get; init; }
 
-    public Game(TPlayer home, TPlayer away, GameResult result)
+    public Game(TEntity home, TEntity away, GameResult result)
     {
-        HomePlayer = home;
-        AwayPlayer = away;
+        HomeEntity = home;
+        AwayEntity = away;
         Result = result;
     }
-}
-
-public enum GameResult
-{
-    HomeWin,
-    AwayWin,
-    Draw,
 }

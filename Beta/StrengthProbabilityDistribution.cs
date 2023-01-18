@@ -1,25 +1,21 @@
 ﻿namespace RatingCalculator.Beta;
 
-internal class BetaRatingProbabilities
+internal class StrengthProbabilityDistribution
 {
     // TODO: Not make global const
     public const int SIZE = 1000;
 
     private readonly double[] _probabilities;
 
-    public BetaRatingProbabilities()
+    public StrengthProbabilityDistribution()
     {
         _probabilities = new double[SIZE - 2];
     }
 
-    public double Get(Strength strength)
+    // Technically a mass, not a density...
+    public double Density(Strength strength)
     {
         return _probabilities[strength.Value - 1];
-    }
-
-    public void Set(Strength strength, double value)
-    {
-        _probabilities[strength.Value] = value;
     }
 
     public void ForEach(Action<Strength> f)
@@ -30,7 +26,7 @@ internal class BetaRatingProbabilities
         }
     }
 
-    public void Normalize()
+    private void Normalize()
     {
         var sum = _probabilities.Sum();
 

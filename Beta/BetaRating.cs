@@ -1,35 +1,58 @@
-﻿namespace RatingCalculator.Beta;
+﻿using RatingCalculator.Models;
 
-internal class BetaRating
+namespace RatingCalculator.Beta;
+
+internal class BetaRating : IRating
 {
-    private readonly BetaRatingProbabilities _probabilities;
+    private readonly StrengthProbabilityDistribution _probabilities;
+    private readonly IEnumerable<StrengthProbabilityDistribution> _opponents;
 
-    public BetaRating()
+    public BetaRating(
+        StrengthProbabilityDistribution strengthProbabilityDistribution,
+        IEnumerable<StrengthProbabilityDistribution> opponents)
     {
-        _probabilities = new();
+        _probabilities = strengthProbabilityDistribution;
+        _opponents = opponents;
     }
 
-    private double ExpectedResult(BetaRating other)
+    public double Mean()
     {
-        // TODO: Inject
-        IExpectedResultCalculator calculator = new ComputingExpectedResultCalculator();
-        
-        double result = 0;
+        double total = 0;
 
-        _probabilities.ForEach(myStrength =>
+        _probabilities.ForEach(s =>
         {
-            double myStrengthProbability = _probabilities.Get(myStrength);
-
-            other._probabilities.ForEach(yourStrength =>
-            {
-                double yourStrengthProbability = other._probabilities.Get(yourStrength);
-                double totalProbability = myStrengthProbability * yourStrengthProbability;
-
-                result += totalProbability * calculator.CalculateStrengthExpectedResult(myStrength, yourStrength);
-            });
+            total += s.Value * _probabilities.Density(s);
         });
 
-        return result;
+        return total;
+    }
+
+    public double Mode()
+    {
+        Strength maxStrength = new(0);
+        double maxProbability = 0;
+
+        _probabilities.ForEach(s =>
+        {
+            double density = _probabilities.Density(s);
+            if (density > maxProbability)
+            {
+                maxStrength = s;
+                maxProbability = density;
+            }
+        });
+
+        return maxStrength.Value;
+    }
+
+    public double Variance()
+    {
+        return 0.0;
+    }
+
+    public double ProbabilityOfChampion()
+    {
+        return 0.0;
     }
 }
 

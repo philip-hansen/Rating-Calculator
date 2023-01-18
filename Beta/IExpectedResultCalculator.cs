@@ -2,8 +2,9 @@
 
 internal interface IExpectedResultCalculator
 {
-    // TODO: Split?
-    double CalculateStrengthExpectedResult(Strength me, Strength you);
+    double CalculateExpectedResult(Strength me, Strength you);
 
-    //double CalculateRatingExpectedResult(BetaRating me, BetaRating you);
+    double CalculateExpectedResult(Strength me, StrengthProbabilityDistribution you);
+
+    double CalculateExpectedResult(StrengthProbabilityDistribution me, StrengthProbabilityDistribution you);
 }
