@@ -1,4 +1,6 @@
-﻿namespace RatingCalculator.Beta;
+﻿using RatingCalculator.Models;
+
+namespace RatingCalculator.Beta;
 
 internal class StrengthProbabilityDistribution
 {
@@ -7,9 +9,29 @@ internal class StrengthProbabilityDistribution
 
     private readonly double[] _probabilities;
 
-    public StrengthProbabilityDistribution()
+    public StrengthProbabilityDistribution(
+        IEnumerable<MyGame> games,
+        IExpectedResultCalculator calculator)
     {
         _probabilities = new double[SIZE - 2];
+
+        ForEach(strength =>
+        {
+            _probabilities[strength.Value] = ProbabilityOfResults(strength, calculator, games);
+        });
+
+        Normalize();
+    }
+
+    public StrengthProbabilityDistribution()
+    {
+        // Default prior distribution
+        // Uniform across [0, 1]
+        _probabilities = new double[SIZE - 2];
+        for (int i = 0; i < _probabilities.Length; i++)
+        {
+            _probabilities[i] = 1.0 / _probabilities.Length;
+        }
     }
 
     // Technically a mass, not a density...
@@ -41,6 +63,29 @@ internal class StrengthProbabilityDistribution
         {
             f(new Strength(i + 1));
         }
+    }
+
+    private static double ProbabilityOfResults(
+        Strength strength, 
+        IExpectedResultCalculator calculator, 
+        IEnumerable<MyGame> games)
+    {
+        double totalProbability = 1.0;
+
+        foreach (MyGame game in games)
+        {
+            double expectedResults = calculator.CalculateExpectedResult(strength, game.Opponent);
+            double probabilityOfResult = game.Result switch
+            {
+                MyGameResult.Win => expectedResults,
+                MyGameResult.Loss => 1 - expectedResults,
+                MyGameResult.Draw => Math.Sqrt(expectedResults * (1 - expectedResults)),
+                _ => throw new Exception("Invalid enum value for game result")
+            };
+            totalProbability *= probabilityOfResult;
+        }
+
+        return totalProbability;
     }
 
     private void Normalize()
