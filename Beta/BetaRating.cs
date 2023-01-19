@@ -18,12 +18,11 @@ internal class BetaRating : IRating
     public double Mean()
     {
         double total = 0;
-
         _probabilities.ForEach(s =>
         {
-            total += s.Value * _probabilities.Density(s);
+            total += s.NormalizedValue * _probabilities.Density(s);
         });
-
+        
         return total;
     }
 

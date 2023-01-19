@@ -3,13 +3,16 @@ using System.Collections.ObjectModel;
 
 namespace RatingCalculator.Beta;
 
-class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TEntity : IEquatable<TEntity>
+public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TEntity : IEquatable<TEntity>
 {
     private readonly IExpectedResultCalculator _expectedResultCalculator;
+    private readonly StrengthProbabilityDistribution _defaultDistribution;
 
-    public BetaRatingCalculator(IExpectedResultCalculator expectedResultCalculator)
+    public BetaRatingCalculator()
     {
+        var expectedResultCalculator = new ComputingExpectedResultCalculator();
         _expectedResultCalculator = expectedResultCalculator;
+        _defaultDistribution = new StrengthProbabilityDistribution();
     }
 
     public IRatingResult<TEntity> CalculateRatings(IEnumerable<Game<TEntity>> games)
@@ -43,7 +46,7 @@ class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TEntity :
         foreach (TEntity entity in entities)
         {
             IEnumerable<MyGame> myGames = scheduledGames[entity]
-                .Select(sg => new MyGame(currentRatings[sg.Opponent], sg.Result));
+                .Select(sg => new MyGame(currentRatings.GetValueOrDefault(sg.Opponent, _defaultDistribution), sg.Result));
 
             newDistributions[entity] = new StrengthProbabilityDistribution(myGames, _expectedResultCalculator);
         }
@@ -57,13 +60,13 @@ class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TEntity :
             {
                 Me = g.HomeEntity,
                 Opponent = g.AwayEntity,
-                Result = MyGameResult.Win,
+                Result = g.Result.ToMyGameHomeResult(),
             })
             .Concat(games.Select(g => new
             {
                 Me = g.AwayEntity,
                 Opponent = g.HomeEntity,
-                Result = MyGameResult.Win,
+                Result = g.Result.ToMyGameAwayResult(),
             }))
             .ToLookup(g => g.Me, g => new ScheduledGame<TEntity>(g.Opponent, g.Result));
     }
