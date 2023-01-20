@@ -8,11 +8,15 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
     private readonly IExpectedResultCalculator _expectedResultCalculator;
     private readonly StrengthProbabilityDistribution _defaultDistribution;
 
-    public BetaRatingCalculator()
+    private readonly int _size;
+
+    public BetaRatingCalculator(int size)
     {
         var expectedResultCalculator = new ComputingExpectedResultCalculator();
         _expectedResultCalculator = expectedResultCalculator;
         _defaultDistribution = new StrengthProbabilityDistribution();
+
+        _size = size;
     }
 
     public IRatingResult<TEntity> CalculateRatings(IEnumerable<Game<TEntity>> games)
@@ -48,7 +52,7 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
             IEnumerable<MyGame> myGames = scheduledGames[entity]
                 .Select(sg => new MyGame(currentRatings.GetValueOrDefault(sg.Opponent, _defaultDistribution), sg.Result));
 
-            newDistributions[entity] = new StrengthProbabilityDistribution(myGames, _expectedResultCalculator);
+            newDistributions[entity] = new StrengthProbabilityDistribution(myGames, _expectedResultCalculator, _size);
         }
 
         return new ReadOnlyDictionary<TEntity, StrengthProbabilityDistribution>(newDistributions);

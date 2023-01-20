@@ -28,7 +28,7 @@ internal class BetaRating : IRating
 
     public double Mode()
     {
-        Strength maxStrength = new(0);
+        int maxStrength = 0;
         double maxProbability = 0;
 
         _probabilities.ForEach(s =>
@@ -36,12 +36,12 @@ internal class BetaRating : IRating
             double density = _probabilities.Density(s);
             if (density > maxProbability)
             {
-                maxStrength = s;
+                maxStrength = s.Value;
                 maxProbability = density;
             }
         });
 
-        return maxStrength.Value;
+        return maxStrength;
     }
 
     public double Variance()

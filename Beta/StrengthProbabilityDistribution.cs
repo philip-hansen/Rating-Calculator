@@ -1,19 +1,19 @@
-﻿using RatingCalculator.Models;
-
-namespace RatingCalculator.Beta;
+﻿namespace RatingCalculator.Beta;
 
 internal class StrengthProbabilityDistribution
 {
-    // TODO: Not make global const
-    public const int SIZE = 1001;
+    private readonly int _size;
 
     private readonly double[] _probabilities;
 
     public StrengthProbabilityDistribution(
         IEnumerable<MyGame> games,
-        IExpectedResultCalculator calculator)
+        IExpectedResultCalculator calculator,
+        int size)
     {
-        _probabilities = new double[SIZE - 1];
+        _size = size;
+
+        _probabilities = new double[_size - 1];
 
         ForEach(strength =>
         {
@@ -27,7 +27,7 @@ internal class StrengthProbabilityDistribution
     {
         // Default prior distribution
         // Uniform across [0, 1]
-        _probabilities = new double[SIZE - 1];
+        _probabilities = new double[_size - 1];
         for (int i = 0; i < _probabilities.Length; i++)
         {
             _probabilities[i] = 1.0 / _probabilities.Length;
@@ -37,7 +37,7 @@ internal class StrengthProbabilityDistribution
     // Technically a mass, not a density...
     public double Density(Strength strength)
     {
-        if (strength.Value < 1 || strength.Value >= SIZE)
+        if (strength.Value < 1 || strength.Value >= _size)
         {
             return 0.0;
         }
@@ -50,7 +50,7 @@ internal class StrengthProbabilityDistribution
 
         for (int i = 1; i <= strength.Value; i++)
         {
-            cumulativeProbability += Density(new Strength(i));
+            cumulativeProbability += Density(new Strength(i, _size));
         }
 
         return cumulativeProbability;
@@ -58,9 +58,9 @@ internal class StrengthProbabilityDistribution
 
     public void ForEach(Action<Strength> f)
     {
-        for (int i = 1; i < SIZE; i++)
+        for (int i = 1; i < _size; i++)
         {
-            f(new Strength(i));
+            f(new Strength(i, _size));
         }
     }
 
