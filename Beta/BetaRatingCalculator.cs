@@ -9,14 +9,16 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
     private readonly StrengthProbabilityDistribution _defaultDistribution;
 
     private readonly int _size;
+    private readonly int _iterations;
 
-    public BetaRatingCalculator(int size)
+    public BetaRatingCalculator(int iterations, int size)
     {
         var expectedResultCalculator = new ComputingExpectedResultCalculator();
         _expectedResultCalculator = expectedResultCalculator;
         _defaultDistribution = new StrengthProbabilityDistribution();
 
         _size = size;
+        _iterations = iterations;
     }
 
     public IRatingResult<TEntity> CalculateRatings(IEnumerable<Game<TEntity>> games)
@@ -30,8 +32,7 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
         IReadOnlyDictionary<TEntity, StrengthProbabilityDistribution> currentRatings 
             = new Dictionary<TEntity, StrengthProbabilityDistribution>();
 
-        // Hardcode 5 for now
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < _iterations; i++)
         {
             currentRatings = UpdateCurrentRatings(currentRatings, schedules, entities);
         }
