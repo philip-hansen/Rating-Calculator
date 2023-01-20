@@ -51,7 +51,20 @@ internal class BetaRating : IRating
 
     public double ProbabilityOfChampion()
     {
-        return 0.0;
+        double totalProbability = 0.0;
+
+        _probabilities.ForEach(strength =>
+        {
+            double probOfChampion = _probabilities.Density(strength);
+            foreach (var opponent in _otherEntities)
+            {
+                probOfChampion *= opponent.Cumulative(strength);
+            }
+
+            totalProbability += probOfChampion;
+        });
+
+        return totalProbability;
     }
 }
 
