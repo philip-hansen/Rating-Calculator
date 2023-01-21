@@ -8,10 +8,10 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
     private readonly IReadOnlyDictionary<TEntity, StrengthProbabilityDistribution> _distributions;
     private readonly StrengthProbabilityDistribution _default;
 
-    public BetaRatingResult(IReadOnlyDictionary<TEntity, StrengthProbabilityDistribution> distributions)
+    public BetaRatingResult(IReadOnlyDictionary<TEntity, StrengthProbabilityDistribution> distributions, int size)
     {
         _distributions = distributions;
-        _default = new StrengthProbabilityDistribution();
+        _default = new StrengthProbabilityDistribution(size);
     }
 
     public IRating Get(TEntity entity)

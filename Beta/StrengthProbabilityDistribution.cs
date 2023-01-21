@@ -8,7 +8,7 @@ internal class StrengthProbabilityDistribution
 
     public StrengthProbabilityDistribution(
         IEnumerable<MyGame> games,
-        IExpectedResultCalculator calculator,
+        ExpectedResultCalculator calculator,
         int size)
     {
         _size = size;
@@ -23,8 +23,10 @@ internal class StrengthProbabilityDistribution
         Normalize();
     }
 
-    public StrengthProbabilityDistribution()
+    public StrengthProbabilityDistribution(int size)
     {
+        _size = size;
+
         // Default prior distribution
         // Uniform across [0, 1]
         _probabilities = new double[_size - 1];
@@ -66,7 +68,7 @@ internal class StrengthProbabilityDistribution
 
     private static double ProbabilityOfResults(
         Strength strength, 
-        IExpectedResultCalculator calculator, 
+        ExpectedResultCalculator calculator, 
         IEnumerable<MyGame> games)
     {
         double totalProbability = 1.0;

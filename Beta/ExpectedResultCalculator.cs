@@ -1,8 +1,8 @@
 ﻿namespace RatingCalculator.Beta;
 
-internal class ComputingExpectedResultCalculator : IExpectedResultCalculator
+internal class ExpectedResultCalculator
 {
-    public double CalculateExpectedResult(Strength me, Strength you)
+    public virtual double CalculateExpectedResult(Strength me, Strength you)
     {
         double myStrength = me.NormalizedValue;
         double yourStrength = you.NormalizedValue;

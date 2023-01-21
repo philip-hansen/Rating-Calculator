@@ -5,7 +5,7 @@ namespace RatingCalculator.Beta;
 
 public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TEntity : IEquatable<TEntity>
 {
-    private readonly IExpectedResultCalculator _expectedResultCalculator;
+    private readonly ExpectedResultCalculator _expectedResultCalculator;
     private readonly StrengthProbabilityDistribution _defaultDistribution;
 
     private readonly int _size;
@@ -13,9 +13,9 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
 
     public BetaRatingCalculator(int iterations, int size)
     {
-        var expectedResultCalculator = new ComputingExpectedResultCalculator();
+        var expectedResultCalculator = new ExpectedResultCalculator();
         _expectedResultCalculator = expectedResultCalculator;
-        _defaultDistribution = new StrengthProbabilityDistribution();
+        _defaultDistribution = new StrengthProbabilityDistribution(size);
 
         _size = size;
         _iterations = iterations;
@@ -37,7 +37,7 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
             currentRatings = UpdateCurrentRatings(currentRatings, schedules, entities);
         }
 
-        return new BetaRatingResult<TEntity>(currentRatings);
+        return new BetaRatingResult<TEntity>(currentRatings, _size);
     }
 
     private IReadOnlyDictionary<TEntity, StrengthProbabilityDistribution> UpdateCurrentRatings(
