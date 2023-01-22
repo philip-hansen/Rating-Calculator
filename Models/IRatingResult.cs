@@ -3,4 +3,6 @@
 public interface IRatingResult<TEntity>
 {
     IRating Get(TEntity player);
+
+    IRating GetGroup(IEnumerable<TEntity> entities);
 }

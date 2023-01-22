@@ -38,5 +38,9 @@ internal class BetaRating : IRating
 
         return totalProbability;
     }
-}
 
+    public static BetaRating FromGroup(
+        IEnumerable<StrengthProbabilityDistribution> groupMembers,
+        IEnumerable<StrengthProbabilityDistribution> allEntities) =>
+            new(StrengthProbabilityDistribution.FromGroup(groupMembers), allEntities.Except(groupMembers));
+}

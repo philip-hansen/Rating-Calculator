@@ -36,6 +36,34 @@ internal class StrengthProbabilityDistribution
         }
     }
 
+    public static StrengthProbabilityDistribution FromGroup(IEnumerable<StrengthProbabilityDistribution> members)
+    {
+        var memberTotal = members.Count();
+        if (memberTotal == 0)
+        {
+            throw new ArgumentException("Argument cannot be empty", nameof(members));
+        }
+
+        // They all should have the same size (otherwise it's undefined anyway),
+        // so using the first should be safe (and First() will be defined due to check above)
+        var size = members.First()._size;
+
+        StrengthProbabilityDistribution combinedDistribution = new(size);
+
+        combinedDistribution.ForEach(s =>
+        {
+            double probability = 0.0;
+            foreach (var member in members)
+            {
+                probability += member.Density(s) / memberTotal;
+            }
+
+            combinedDistribution._probabilities[s.Value - 1] = probability;
+        });
+
+        return combinedDistribution;
+    }
+
     // Technically a mass, not a density...
     public double Density(Strength strength)
     {

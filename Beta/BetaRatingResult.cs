@@ -22,4 +22,18 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
 
         return new BetaRating(distribution, others);
     }
+
+    public IRating GetGroup(IEnumerable<TEntity> entities)
+    {
+        if (!entities.Any())
+        {
+            throw new ArgumentException("At least one entity is required in group", nameof(entities));
+        }
+
+        var distributions = entities.Select(e => _distributions.GetValueOrDefault(e, _default));
+
+        var allDistributions = _distributions.Select(kv => kv.Value);
+
+        return BetaRating.FromGroup(distributions, allDistributions);
+    }
 }
