@@ -12,11 +12,6 @@ internal readonly record struct Strength
 
     public Strength(int value, int size)
     {
-        if (value < 0 || value > size)
-        {
-            throw new ArgumentOutOfRangeException(nameof(value));
-        }
-
         _value = value;
         _size = size;
     }
