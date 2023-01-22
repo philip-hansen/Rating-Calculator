@@ -66,6 +66,50 @@ internal class StrengthProbabilityDistribution
         }
     }
 
+    public double Mean()
+    {
+        double total = 0.0;
+        ForEach(s =>
+        {
+            total += s.NormalizedValue * Density(s);
+        });
+
+        return total;
+    }
+
+    public double Mode()
+    {
+        int maxStrength = 0;
+        double maxProbability = 0;
+
+        ForEach(s =>
+        {
+            double density = Density(s);
+            if (density > maxProbability)
+            {
+                maxStrength = s.Value;
+                maxProbability = density;
+            }
+        });
+
+        return maxStrength;
+    }
+
+    public double Variance()
+    {
+        double mean = Mean();
+        double variance = 0.0;
+
+        ForEach(s =>
+        {
+            double diffSquared = (s.Value - mean) * (s.Value - mean);
+
+            variance += diffSquared * Density(s);
+        });
+
+        return variance;
+    }
+
     private static double ProbabilityOfResults(
         Strength strength, 
         ExpectedResultCalculator calculator, 

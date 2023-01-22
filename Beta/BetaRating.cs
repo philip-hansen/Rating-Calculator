@@ -15,39 +15,11 @@ internal class BetaRating : IRating
         _otherEntities = otherEntities;
     }
 
-    public double Mean()
-    {
-        double total = 0;
-        _probabilities.ForEach(s =>
-        {
-            total += s.NormalizedValue * _probabilities.Density(s);
-        });
-        
-        return total;
-    }
+    public double Mean() => _probabilities.Mean();
 
-    public double Mode()
-    {
-        int maxStrength = 0;
-        double maxProbability = 0;
+    public double Mode() => _probabilities.Mode();
 
-        _probabilities.ForEach(s =>
-        {
-            double density = _probabilities.Density(s);
-            if (density > maxProbability)
-            {
-                maxStrength = s.Value;
-                maxProbability = density;
-            }
-        });
-
-        return maxStrength;
-    }
-
-    public double Variance()
-    {
-        return 0.0;
-    }
+    public double Variance() => _probabilities.Variance();
 
     public double ProbabilityOfChampion()
     {
