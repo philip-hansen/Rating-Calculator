@@ -1,5 +1,4 @@
 ﻿using RatingCalculator.Models;
-using System.Collections.ObjectModel;
 
 namespace RatingCalculator.Beta;
 

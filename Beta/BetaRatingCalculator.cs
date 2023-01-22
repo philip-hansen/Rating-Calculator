@@ -13,7 +13,7 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
 
     public BetaRatingCalculator(int iterations, int size)
     {
-        var expectedResultCalculator = new ExpectedResultCalculator();
+        var expectedResultCalculator = new CachingExpectedResultCalculator(size);
         _expectedResultCalculator = expectedResultCalculator;
         _defaultDistribution = new StrengthProbabilityDistribution(size);
 

@@ -2,20 +2,20 @@
 
 internal class CachingExpectedResultCalculator : ExpectedResultCalculator
 {
-    private readonly double?[,] _cachedProbabilities;
+    private readonly double[,] _cachedProbabilities;
 
     public CachingExpectedResultCalculator(int size)
     {
-        _cachedProbabilities = new double?[size, size];
-    }
+        _cachedProbabilities = new double[size, size];
 
-    public override double CalculateExpectedResult(Strength me, Strength you)
-    {
-        if (_cachedProbabilities[me.Value - 1, you.Value - 1] is null)
+        for (int x = 1; x < size; x++)
         {
-            _cachedProbabilities[me.Value - 1, you.Value - 1] = base.CalculateExpectedResult(me, you);
+            for (int y = 1; y < size; y++)
+            {
+                _cachedProbabilities[x, y] = base.CalculateExpectedResult(new Strength(x, size), new Strength(y, size));
+            }
         }
-
-        return _cachedProbabilities[me.Value - 1, you.Value - 1]!.Value;
     }
+
+    public override double CalculateExpectedResult(Strength me, Strength you) => _cachedProbabilities[me.Value, you.Value];
 }
