@@ -130,7 +130,7 @@ internal class StrengthProbabilityDistribution
 
         ForEach(s =>
         {
-            double diffSquared = (s.Value - mean) * (s.Value - mean);
+            double diffSquared = (s.NormalizedValue - mean) * (s.NormalizedValue - mean);
 
             variance += diffSquared * Density(s);
         });
