@@ -107,7 +107,8 @@ internal class StrengthProbabilityDistribution
 
     public double Mode()
     {
-        int maxStrength = 0;
+        // Value doesn't matter; guaranteed to be overwritten
+        Strength maxStrength = new(1, 1);
         double maxProbability = 0;
 
         ForEach(s =>
@@ -115,12 +116,12 @@ internal class StrengthProbabilityDistribution
             double density = Density(s);
             if (density > maxProbability)
             {
-                maxStrength = s.Value;
+                maxStrength = s;
                 maxProbability = density;
             }
         });
 
-        return maxStrength;
+        return maxStrength.NormalizedValue;
     }
 
     public double Variance()
