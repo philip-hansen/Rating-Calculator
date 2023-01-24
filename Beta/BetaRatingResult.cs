@@ -17,7 +17,7 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
     {
         var distribution = _distributions.GetValueOrDefault(entity, _default);
         var others = _distributions
-            .Where(kv => !kv.Key.Equals(kv))
+            .Where(kv => !kv.Key.Equals(entity))
             .Select(kv => kv.Value);
 
         return new BetaRating(distribution, others);
