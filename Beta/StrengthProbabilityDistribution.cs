@@ -39,13 +39,9 @@ internal class StrengthProbabilityDistribution
     public static StrengthProbabilityDistribution FromGroup(IEnumerable<StrengthProbabilityDistribution> members)
     {
         var memberTotal = members.Count();
-        if (memberTotal == 0)
-        {
-            throw new ArgumentException("Argument cannot be empty", nameof(members));
-        }
-
+        
         // They all should have the same size (otherwise it's undefined anyway),
-        // so using the first should be safe (and First() will be defined due to check above)
+        // so using the first should be safe
         var size = members.First()._size;
 
         StrengthProbabilityDistribution combinedDistribution = new(size);
