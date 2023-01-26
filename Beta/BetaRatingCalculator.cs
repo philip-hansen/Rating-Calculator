@@ -3,6 +3,10 @@ using System.Collections.ObjectModel;
 
 namespace RatingCalculator.Beta;
 
+/// <summary>
+/// Calculates beta ratings. (TODO: description)
+/// </summary>
+/// <typeparam name="TEntity">Type the entities are identified by</typeparam>
 public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TEntity : IEquatable<TEntity>
 {
     private readonly ExpectedResultCalculator _expectedResultCalculator;
