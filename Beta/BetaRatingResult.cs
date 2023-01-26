@@ -6,11 +6,13 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
 {
     private readonly IReadOnlyDictionary<TEntity, StrengthProbabilityDistribution> _distributions;
     private readonly StrengthProbabilityDistribution _default;
+    private readonly int _size;
 
     public BetaRatingResult(IReadOnlyDictionary<TEntity, StrengthProbabilityDistribution> distributions, int size)
     {
         _distributions = distributions;
         _default = new StrengthProbabilityDistribution(size);
+        _size = size;
     }
 
     public IRating Get(TEntity entity)
@@ -25,14 +27,14 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
 
     public IRating GetGroup(IEnumerable<TEntity> entities)
     {
+        var allDistributions = _distributions.Select(kv => kv.Value);
+
         if (!entities.Any())
         {
-            throw new ArgumentException("At least one entity is required in group", nameof(entities));
+            return new BetaRating(new(_size), allDistributions);
         }
 
         var distributions = entities.Select(e => _distributions.GetValueOrDefault(e, _default));
-
-        var allDistributions = _distributions.Select(kv => kv.Value);
 
         return BetaRating.FromGroup(distributions, allDistributions);
     }
