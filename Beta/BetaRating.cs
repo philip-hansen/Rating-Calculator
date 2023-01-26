@@ -27,6 +27,8 @@ internal class BetaRating : IRating
 
     public double Variance() => _probabilities.Variance();
 
+    public double Median() => _probabilities.Median();
+
     public double ProbabilityOfChampion()
     {
         double totalProbability = 0.0;

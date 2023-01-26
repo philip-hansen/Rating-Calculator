@@ -135,6 +135,23 @@ internal class StrengthProbabilityDistribution
         return variance;
     }
 
+    public double Median()
+    {
+        double cumulative = 0.0;
+        for (int i = 1; i < _size; i++)
+        {
+            var strength = new Strength(i, _size);
+            cumulative += Density(strength);
+            if (cumulative > 0.5)
+            {
+                return strength.NormalizedValue;
+            }
+        }
+
+        // Should not happen
+        return 0.0;
+    }
+
     private static double ProbabilityOfResults(
         Strength strength, 
         ExpectedResultCalculator calculator, 

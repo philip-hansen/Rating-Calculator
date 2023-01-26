@@ -27,6 +27,13 @@ public interface IRating
     double Mode();
 
     /// <summary>
+    /// Calculate the median value of the rating.
+    /// For non-probabilistic ratings, this will be the point value.
+    /// </summary>
+    /// <returns>Median</returns>
+    double Median();
+
+    /// <summary>
     /// Calculate the probability that the value of no other rating in the system is higher than this one.
     /// Only other entities that have participated in at least one game are considered.
     /// For non-probabilistic ratings, this will be 100% if it is the highest, and 0% otherwise.
