@@ -25,17 +25,4 @@ internal class ExpectedResultCalculator
 
         return expectedResult;
     }
-
-    public double CalculateExpectedResult(StrengthProbabilityDistribution me, StrengthProbabilityDistribution you)
-    {
-        double expectedResult = 0.0;
-
-        me.ForEach(myStrength =>
-        {
-            double myStrengthProbability = me.Density(myStrength);
-            expectedResult += myStrengthProbability * CalculateExpectedResult(myStrength, you);
-        });
-
-        return expectedResult;
-    }
 }
