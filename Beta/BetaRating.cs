@@ -2,7 +2,7 @@
 
 namespace RatingCalculator.Beta;
 
-internal class BetaRating<TEntity> : IRating
+internal class BetaRating : IRating
 {
     private readonly StrengthProbabilityDistribution _probabilities;
     private readonly IEnumerable<StrengthProbabilityDistribution> _otherEntities;
@@ -50,7 +50,7 @@ internal class BetaRating<TEntity> : IRating
             .Select(o => 1 - _calculator.CalculateAverageExpectedResult(o))
             .Average();
 
-    public static BetaRating<TEntity> FromGroup(
+    public static BetaRating FromGroup(
         IEnumerable<StrengthProbabilityDistribution> groupMembers,
         IEnumerable<StrengthProbabilityDistribution> allEntities,
         IEnumerable<StrengthProbabilityDistribution> opponents,
