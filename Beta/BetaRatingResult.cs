@@ -8,7 +8,6 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
     private readonly ILookup<TEntity, ScheduledGame<TEntity>> _schedules;
     private readonly StrengthProbabilityDistribution _default;
     private readonly ExpectedResultCalculator _calculator;
-    private readonly int _size;
 
     public BetaRatingResult(
         IReadOnlyDictionary<TEntity, StrengthProbabilityDistribution> distributions,
@@ -20,7 +19,6 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
         _default = new StrengthProbabilityDistribution(size);
         _schedules = schedules;
         _calculator = calculator;
-        _size = size;
     }
 
     public IRating Get(TEntity entity)
@@ -33,7 +31,7 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
         var opponents = _schedules[entity]
             .Select(sg => _distributions.GetValueOrDefault(sg.Opponent, _default));
 
-        return new BetaRating<TEntity>(distribution, others, opponents, _calculator, _size);
+        return new BetaRating<TEntity>(distribution, others, opponents, _calculator);
     }
 
     public IRating GetGroup(IEnumerable<TEntity> entities)
@@ -51,6 +49,6 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
 
         var allDistributions = _distributions.Select(kv => kv.Value);
 
-        return BetaRating<TEntity>.FromGroup(distributions, allDistributions, opponents, _calculator, _size);
+        return BetaRating<TEntity>.FromGroup(distributions, allDistributions, opponents, _calculator);
     }
 }
