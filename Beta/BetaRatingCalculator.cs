@@ -37,7 +37,7 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
             currentRatings = UpdateCurrentRatings(currentRatings, schedules, entities);
         }
 
-        return new BetaRatingResult<TEntity>(currentRatings, _size);
+        return new BetaRatingResult<TEntity>(currentRatings, schedules, _expectedResultCalculator, _size);
     }
 
     private IReadOnlyDictionary<TEntity, StrengthProbabilityDistribution> UpdateCurrentRatings(

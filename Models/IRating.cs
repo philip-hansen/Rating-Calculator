@@ -9,4 +9,6 @@ public interface IRating
     double Mode();
 
     double ProbabilityOfChampion();
+
+    double StrengthOfSchedule();
 }
