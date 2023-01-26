@@ -2,17 +2,26 @@
 
 namespace RatingCalculator.Beta;
 
-internal class BetaRating : IRating
+internal class BetaRating<TEntity> : IRating
 {
     private readonly StrengthProbabilityDistribution _probabilities;
     private readonly IEnumerable<StrengthProbabilityDistribution> _otherEntities;
+    private readonly IEnumerable<StrengthProbabilityDistribution> _opponents;
+    private readonly ExpectedResultCalculator _calculator;
+    private readonly int _size;
 
     public BetaRating(
         StrengthProbabilityDistribution strengthProbabilityDistribution,
-        IEnumerable<StrengthProbabilityDistribution> otherEntities)
+        IEnumerable<StrengthProbabilityDistribution> otherEntities,
+        IEnumerable<StrengthProbabilityDistribution> opponents,
+        ExpectedResultCalculator calculator,
+        int size)
     {
         _probabilities = strengthProbabilityDistribution;
         _otherEntities = otherEntities;
+        _opponents = opponents;
+        _calculator = calculator;
+        _size = size;
     }
 
     public double Mean() => _probabilities.Mean();
@@ -39,8 +48,21 @@ internal class BetaRating : IRating
         return totalProbability;
     }
 
-    public static BetaRating FromGroup(
+    public double StrengthOfSchedule() =>
+        _opponents
+            .Select(o => 1 - _calculator.CalculateExpectedResult(new Strength(_size / 2, _size), o))
+            .Average();
+
+    public static BetaRating<TEntity> FromGroup(
         IEnumerable<StrengthProbabilityDistribution> groupMembers,
-        IEnumerable<StrengthProbabilityDistribution> allEntities) =>
-            new(StrengthProbabilityDistribution.FromGroup(groupMembers), allEntities.Except(groupMembers));
+        IEnumerable<StrengthProbabilityDistribution> allEntities,
+        IEnumerable<StrengthProbabilityDistribution> opponents,
+        ExpectedResultCalculator calculator,
+        int size) => 
+            new(
+                StrengthProbabilityDistribution.FromGroup(groupMembers), 
+                allEntities.Except(groupMembers), 
+                opponents, 
+                calculator, 
+                size);
 }
