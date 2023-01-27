@@ -15,7 +15,7 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
     private readonly int _size;
     private readonly int _iterations;
 
-    public BetaRatingCalculator(int iterations, int size)
+    public BetaRatingCalculator(int iterations = 5, int size = 1001)
     {
         var expectedResultCalculator = new CachingExpectedResultCalculator(size);
         _expectedResultCalculator = expectedResultCalculator;
