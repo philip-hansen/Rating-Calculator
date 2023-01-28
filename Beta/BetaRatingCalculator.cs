@@ -15,14 +15,18 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
     private readonly int _size;
     private readonly int _iterations;
 
-    public BetaRatingCalculator(int iterations = 5, int size = 1001)
+    public BetaRatingCalculator(BetaRatingOptions? options)
     {
-        var expectedResultCalculator = new CachingExpectedResultCalculator(size);
-        _expectedResultCalculator = expectedResultCalculator;
-        _defaultDistribution = new StrengthProbabilityDistribution(size);
+        options ??= new();
 
-        _size = size;
-        _iterations = iterations;
+        _size = options.Size;
+        _iterations = options.Iterations;
+        _expectedResultCalculator = 
+            options.OptimizeForSpeed 
+            ? new CachingExpectedResultCalculator(_size)
+            : new ExpectedResultCalculator(_size);
+
+        _defaultDistribution = new StrengthProbabilityDistribution(_size);
     }
 
     public IRatingResult<TEntity> CalculateRatings(IEnumerable<Game<TEntity>> games)
