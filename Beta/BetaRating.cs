@@ -44,10 +44,18 @@ internal class BetaRating : IRating
         return totalProbability;
     }
 
-    public double StrengthOfSchedule() =>
-        _opponents
+    public double StrengthOfSchedule()
+    {
+        if (!_opponents.Any())
+        {
+            // Arbitrary default?
+            return 0.5;
+        }
+
+        return _opponents
             .Select(o => 1 - o.ExpectedResultAgainstAverage)
             .Average();
+    }
 
     public static BetaRating FromGroup(
         IEnumerable<StrengthProbabilityDistribution> groupMembers,
