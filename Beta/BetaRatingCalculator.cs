@@ -15,10 +15,8 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
     private readonly int _size;
     private readonly int _iterations;
 
-    public BetaRatingCalculator(BetaRatingOptions? options)
+    public BetaRatingCalculator(BetaRatingOptions options)
     {
-        options ??= new();
-
         _size = options.Size;
         _iterations = options.Iterations;
         _expectedResultCalculator = 
@@ -28,6 +26,8 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
 
         _defaultDistribution = new StrengthProbabilityDistribution(_size);
     }
+
+    public BetaRatingCalculator() : this(new()) { }
 
     public IRatingResult<TEntity> CalculateRatings(IEnumerable<Game<TEntity>> games)
     {
