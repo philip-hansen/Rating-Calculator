@@ -9,7 +9,7 @@ internal class StrengthProbabilityDistribution
     private readonly double _expectedResultAgainstAverage;
 
     public StrengthProbabilityDistribution(
-        IEnumerable<MyGame> games,
+        IEnumerable<TeamGame> games,
         ExpectedResultCalculator calculator,
         int size)
     {
@@ -162,11 +162,11 @@ internal class StrengthProbabilityDistribution
     private static double ProbabilityOfResults(
         Strength strength, 
         ExpectedResultCalculator calculator, 
-        IEnumerable<MyGame> games)
+        IEnumerable<TeamGame> games)
     {
         double totalProbability = 1.0;
 
-        foreach (MyGame game in games)
+        foreach (TeamGame game in games)
         {
             double expectedResults = calculator.CalculateExpectedResult(strength, game.Opponent);
             double probabilityOfResult = game.Result switch

@@ -58,8 +58,8 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
 
         foreach (TEntity entity in entities)
         {
-            IEnumerable<MyGame> myGames = scheduledGames[entity]
-                .Select(sg => new MyGame(currentRatings.GetValueOrDefault(sg.Opponent, _defaultDistribution), sg.Result));
+            IEnumerable<TeamGame> myGames = scheduledGames[entity]
+                .Select(sg => new TeamGame(currentRatings.GetValueOrDefault(sg.Opponent, _defaultDistribution), sg.Result));
 
             newDistributions[entity] = new StrengthProbabilityDistribution(myGames, _expectedResultCalculator, _size);
         }
