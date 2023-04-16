@@ -32,7 +32,7 @@ internal class StrengthProbabilityDistribution
         _size = size;
 
         // Default prior distribution
-        // Uniform across [0, 1]
+        // Uniform across (0, 1)
         _probabilities = new double[_size - 1];
         for (int i = 0; i < _probabilities.Length; i++)
         {
