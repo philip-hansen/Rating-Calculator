@@ -154,8 +154,9 @@ internal class StrengthProbabilityDistribution
             }
         }
 
-        // Should not happen
-        return 0.0;
+        // We need to do something here to satisfy the method's return contract, but mathematically, this should never happen.
+        // If this exception gets thrown, something is wrong with the distribution's internal density logic.
+        throw new Exception("Cumulative never reached 50%");
     }
 
     private static double ProbabilityOfResults(
