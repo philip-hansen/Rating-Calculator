@@ -5,7 +5,6 @@ namespace RatingCalculator.Beta;
 internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity : IEquatable<TEntity>
 {
     private readonly IReadOnlyDictionary<TEntity, StrengthProbabilityDistribution> _distributions;
-    private readonly ILookup<TEntity, ScheduledGame<TEntity>> _schedules;
     private readonly StrengthProbabilityDistribution _default;
     private readonly int _size;
 
@@ -16,7 +15,6 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
     {
         _distributions = distributions;
         _default = new StrengthProbabilityDistribution(size);
-        _schedules = schedules;
         _size = size;
     }
 
@@ -27,10 +25,7 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
             .Where(kv => !kv.Key.Equals(entity))
             .Select(kv => kv.Value);
 
-        var opponents = _schedules[entity]
-            .Select(sg => _distributions.GetValueOrDefault(sg.Opponent, _default));
-
-        return new BetaRating(distribution, others, opponents);
+        return new BetaRating(distribution, others);
     }
 
     public IRating GetGroup(IEnumerable<TEntity> entities)
@@ -39,15 +34,11 @@ internal class BetaRatingResult<TEntity> : IRatingResult<TEntity> where TEntity 
 
         var allDistributions = _distributions.Select(kv => kv.Value);
 
-        var opponents = entities
-            .SelectMany(e => _schedules[e])
-            .Select(sg => _distributions.GetValueOrDefault(sg.Opponent, _default));
-
         if (!entities.Any())
         {
-            return new BetaRating(new(_size), allDistributions, Enumerable.Empty<StrengthProbabilityDistribution>());
+            return new BetaRating(new(_size), allDistributions);
         }
 
-        return BetaRating.FromGroup(distributions, allDistributions, opponents);
+        return BetaRating.FromGroup(distributions, allDistributions);
     }
 }

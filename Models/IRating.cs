@@ -40,10 +40,4 @@ public interface IRating
     /// </summary>
     /// <returns>Probability of Champion</returns>
     double ProbabilityOfChampion();
-
-    /// <summary>
-    /// Calculate the expected record that an average (or some anchor) entity would have against the schedule of this one.
-    /// </summary>
-    /// <returns>Strength of Schedule</returns>
-    double StrengthOfSchedule();
 }

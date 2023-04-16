@@ -4,7 +4,7 @@ internal class CachingExpectedResultCalculator : ExpectedResultCalculator
 {
     private readonly double[,] _cachedProbabilities;
 
-    public CachingExpectedResultCalculator(int size) : base(size)
+    public CachingExpectedResultCalculator(int size)
     {
         _cachedProbabilities = new double[size, size];
 

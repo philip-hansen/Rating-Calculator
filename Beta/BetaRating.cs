@@ -6,16 +6,13 @@ internal class BetaRating : IRating
 {
     private readonly StrengthProbabilityDistribution _probabilities;
     private readonly IEnumerable<StrengthProbabilityDistribution> _otherEntities;
-    private readonly IEnumerable<StrengthProbabilityDistribution> _opponents;
 
     public BetaRating(
         StrengthProbabilityDistribution strengthProbabilityDistribution,
-        IEnumerable<StrengthProbabilityDistribution> otherEntities,
-        IEnumerable<StrengthProbabilityDistribution> opponents)
+        IEnumerable<StrengthProbabilityDistribution> otherEntities)
     {
         _probabilities = strengthProbabilityDistribution;
         _otherEntities = otherEntities;
-        _opponents = opponents;
     }
 
     public double Mean() => _probabilities.Mean();
@@ -44,24 +41,9 @@ internal class BetaRating : IRating
         return totalProbability;
     }
 
-    public double StrengthOfSchedule()
-    {
-        if (!_opponents.Any())
-        {
-            // Arbitrary default?
-            return 0.5;
-        }
-
-        return _opponents
-            .Select(o => 1 - o.ExpectedResultAgainstAverage)
-            .Average();
-    }
-
     public static BetaRating FromGroup(
         IEnumerable<StrengthProbabilityDistribution> groupMembers,
-        IEnumerable<StrengthProbabilityDistribution> allEntities,
-        IEnumerable<StrengthProbabilityDistribution> opponents) => 
+        IEnumerable<StrengthProbabilityDistribution> allEntities) => 
             new(StrengthProbabilityDistribution.FromGroup(groupMembers), 
-                allEntities.Except(groupMembers), 
-                opponents);
+                allEntities.Except(groupMembers));
 }

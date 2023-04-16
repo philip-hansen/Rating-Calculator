@@ -6,8 +6,6 @@ internal class StrengthProbabilityDistribution
 
     private readonly double[] _probabilities;
 
-    private readonly double _expectedResultAgainstAverage;
-
     public StrengthProbabilityDistribution(
         IEnumerable<TeamGame> games,
         ExpectedResultCalculator calculator,
@@ -23,8 +21,6 @@ internal class StrengthProbabilityDistribution
         });
 
         Normalize();
-
-        _expectedResultAgainstAverage = calculator.CalculateAverageExpectedResult(this);
     }
 
     public StrengthProbabilityDistribution(int size)
@@ -63,8 +59,6 @@ internal class StrengthProbabilityDistribution
 
         return combinedDistribution;
     }
-
-    public double ExpectedResultAgainstAverage => _expectedResultAgainstAverage;
 
     // Technically a mass, not a density...
     public double Density(Strength strength)

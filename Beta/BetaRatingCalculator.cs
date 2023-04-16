@@ -22,7 +22,7 @@ public class BetaRatingCalculator<TEntity> : IRatingCalculator<TEntity> where TE
         _expectedResultCalculator = 
             options.OptimizeForSpeed 
             ? new CachingExpectedResultCalculator(_size)
-            : new ExpectedResultCalculator(_size);
+            : new ExpectedResultCalculator();
 
         _defaultDistribution = new StrengthProbabilityDistribution(_size);
     }
